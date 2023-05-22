@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, from } from 'rxjs'
+import { Observable, filter } from 'rxjs'
 
 @Component({
   selector: 'app-root',
@@ -12,17 +12,27 @@ export class AppComponent {
     this.component()
   }
 
-  numbers = [1, 5, 10]
-  source = from(this.numbers)
+  numbers = [1, 5, 10, 15, 20, 25, 30]
 
-  sourceInstance = new Observable(subscriber => {
-    
+  source = new Observable(subscriber => {
+    let index = 0
+    let produceValue = () => {
+      subscriber.next(this.numbers[index++])
+      if (index < this.numbers.length) {
+        setTimeout(produceValue, 500)
+      } else {
+        subscriber.complete()
+      }
+    }
+    produceValue()
   })
 
   component() {
-    this.sourceInstance.subscribe({
+    this.source.pipe(
+      filter((n: any) => n > 5)
+    ).subscribe({
       next: (x: any) => {
-        console.log(x)
+        console.log(`filter: ${x}`)
       },
       error: (e: Error) => console.log(e),
       complete: () => console.log('Complete'),
