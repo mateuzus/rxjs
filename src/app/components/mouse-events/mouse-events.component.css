@@ -1,7 +1,7 @@
 #circle {
     width: 20px;
     height: 20px;
-    background: red;
-    border-radius: 50%;
+    background: rgb(38, 0, 255);
+    border-radius: 90%;
     position: absolute;
 }
